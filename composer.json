@@ -41,7 +41,8 @@
         "hyperf/model-cache": "~1.1.0",
         "hyperf/elasticsearch": "~1.1.0",
         "hyperf/tracer": "~1.1.0",
-        "swlib/saber": "^1.0"
+        "swlib/saber": "^1.0",
+        "inocturne/hyperf-info": "dev-master"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",
