@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
+
 /**
  * This file is part of Hyperf.
  *
@@ -14,7 +15,7 @@ use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Log\LogLevel;
 
 return [
-    'app_name' => env('APP_NAME', 'skeleton'),
+    'app_name'                   => env('APP_NAME', 'skeleton'),
     StdoutLoggerInterface::class => [
         'log_level' => [
             LogLevel::ALERT,
@@ -30,15 +31,19 @@ return [
     /**
      *  是否是调试模式
      */
-    'debug' => false,
+    'debug'                      => false,
 
     /**
      * 输出是否展示时间
      */
-    'show_time' => true,
+    'show_time'                  => true,
 
     /**
      * 输出内容是否展示颜色样式
      */
-    'show_color' => true,
+    'show_color'                 => true,
+    /**
+     * 定时器心跳检测时间ms
+     */
+    'tick_heartbeat_time'        => 5000
 ];
