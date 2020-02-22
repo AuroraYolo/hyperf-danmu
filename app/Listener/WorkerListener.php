@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Listener;
 
 use App\Constants\Session;
@@ -22,16 +23,13 @@ class WorkerListener implements ListenerInterface
      */
     private $container;
 
-    private $redis;
-
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->logger    = $container->get(StdoutLoggerInterface::class);
-        $this->redis     = $container->get(\Redis::class);
     }
 
-    public function listen() : array
+    public function listen(): array
     {
         return [
             OnWorkerStop::class,
@@ -42,20 +40,20 @@ class WorkerListener implements ListenerInterface
     public function process(object $event)
     {
         if ($event instanceof AfterWorkerStart) {
-            Timer::tick(config('tick_heartbeat_time'), function () use ($event)
-            {
+            Timer::tick(config('tick_heartbeat_time'), function () use ($event) {
+                $redis = $this->container->get(\Redis::class);
                 foreach ($event->server->heartbeat(true) as $fd) {
-                    if ($this->redis->sIsMember(Session::FD_KEY, $fd)) {
-                        $this->redis->sRem(Session::FD_KEY, $fd);
+                    if ($redis->sIsMember(Session::FD_KEY, $fd)) {
+                        $redis->sRem(Session::FD_KEY, $fd);
                         $event->server->close($fd);
                         $this->logger->info(sprintf('[Redis] Del Fd:[%s]', $fd));
                     }
                 }
             });
         } elseif ($event instanceof OnWorkerStop) {
-            $this->redis->del(Session::FD_KEY);
+            $redis = $this->container->get(\Redis::class);
+            $redis->del(Session::FD_KEY);
             $this->logger->info(sprintf('[Redis] Del Key:[%s]', Session::FD_KEY));
         }
     }
-
 }
