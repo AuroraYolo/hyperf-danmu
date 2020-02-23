@@ -51,6 +51,7 @@ class WorkerListener implements ListenerInterface
                 }
             });
         } elseif ($event instanceof OnWorkerStop) {
+            Timer::clearAll();
             $redis = $this->container->get(\Redis::class);
             $redis->del(Session::FD_KEY);
             $this->logger->info(sprintf('[Redis] Del Key:[%s]', Session::FD_KEY));
